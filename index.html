@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experience Finder — cerita yang terasa dekat</title>
+  <meta name="description" content="Temukan pengalaman nyata dari orang lain dan bagikan ceritamu di Experience Finder.">
+  <meta name="theme-color" content="#526b62">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="splash" class="splash" aria-hidden="true">
+    <img class="brand-logo large" src="icon.svg" alt="Experience Finder logo">
+    <p>experience<span>finder</span></p>
+  </div>
+
+  <header class="site-header">
+    <div class="shell nav-shell">
+      <button class="brand" onclick="showHome()" aria-label="Experience Finder, ke beranda">
+        <img class="brand-logo" src="icon.svg" alt="Experience Finder logo">
+        <span class="brand-copy"><strong>experience</strong><span>finder</span></span>
+      </button>
+
+      <nav class="desktop-nav" aria-label="Navigasi utama">
+        <button id="homeNav" class="nav-link active" onclick="showHome()">Beranda</button>
+        <button id="discoverNav" class="nav-link" onclick="showDiscover()">Temukan</button>
+        <button id="shareNav" class="nav-link" onclick="showShare()">Bagikan</button>
+        <button id="savedNav" class="nav-link" onclick="showSaved()">Tersimpan <span id="savedBadge" class="nav-badge">0</span></button>
+      </nav>
+
+      <button class="nav-cta" onclick="showShare()">Ceritakan pengalaman <span>↗</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section id="homePage" class="page-section">
+      <div class="shell hero-shell">
+        <div class="hero-copy">
+          <span class="eyebrow">RUANG CERITA YANG TERASA DEKAT</span>
+          <h1>Belum pernah mengalami?<br><em>Mungkin orang lain sudah.</em></h1>
+          <p class="hero-text">Cari pengalaman nyata dari orang yang pernah berada di situasi yang sama. Bukan jawaban yang sempurna—hanya cerita yang membuat langkah berikutnya terasa lebih ringan.</p>
+
+          <form id="searchForm" class="search-bar" role="search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" autocomplete="off" placeholder="Kamu sedang menghadapi apa?" aria-label="Cari pengalaman">
+            <button type="submit">Cari cerita <span>→</span></button>
+          </form>
+
+          <div class="quick-searches" aria-label="Pencarian populer">
+            <span>sering dicari</span>
+            <button onclick="searchCategory('Interview kerja')">interview pertama</button>
+            <button onclick="searchCategory('Organisasi')">masuk organisasi</button>
+            <button onclick="searchCategory('Presentasi')">presentasi</button>
+          </div>
+
+          <div class="hero-stats">
+            <div><strong id="storyTotal">15+</strong><span>cerita nyata</span></div>
+            <div><strong>08</strong><span>situasi umum</span></div>
+            <div><strong>01</strong><span>tempat untuk cerita</span></div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="photo-frame">
+            <div class="photo-overlay"></div>
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=84" alt="Orang-orang sedang berbincang dan berbagi pengalaman" loading="eager">
+            <div class="photo-label top-left"><span>EXPERIENCE</span><strong>YOU ARE<br>NOT ALONE.</strong></div>
+            <div class="photo-label bottom-right"><span>cerita hari ini</span><strong>“Ternyata aku tidak<br>sendirian yang bingung.”</strong><small>pengalaman mahasiswa</small></div>
+          </div>
+          <div class="floating-card note-card">
+            <span class="note-pin"></span>
+            <small>cerita hari ini</small>
+            <strong>“Aku kira cuma aku yang bingung di hari pertama.”</strong>
+            <button onclick="openDetail(4)">Baca ceritanya <span>↗</span></button>
+          </div>
+          <div class="floating-card count-card"><strong>10K+</strong><span>kemungkinan<br>cerita baru</span></div>
+        </div>
+      </div>
+
+      <div class="shell section-divider"><span></span><p>cerita dari situasi sehari-hari yang mungkin kamu kenal</p><span></span></div>
+
+      <section class="shell topics-section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">MAU MULAI DARI MANA?</span>
+            <h2>Pilih situasi yang paling dekat denganmu.</h2>
+          </div>
+          <button class="text-button" onclick="showDiscover()">lihat semua cerita <span>→</span></button>
+        </div>
+        <div id="categories" class="topic-grid"></div>
+      </section>
+
+      <section class="shell stories-section" id="storySection">
+        <div class="section-head story-head">
+          <div>
+            <span class="eyebrow">DARI PENGALAMAN ORANG LAIN</span>
+            <h2 id="resultTitle">Mungkin ini yang kamu cari</h2>
+          </div>
+          <div class="story-controls">
+            <span id="resultCount" class="result-count"></span>
+            <select id="sortSelect" aria-label="Urutkan cerita" onchange="applyCurrentSort()">
+              <option value="relevant">Relevan</option>
+              <option value="helpful">Paling membantu</option>
+              <option value="latest">Terbaru</option>
+            </select>
+          </div>
+        </div>
+        <div id="experienceList" class="story-grid"></div>
+      </section>
+    </section>
+
+    <section id="discoverPage" class="page-section hidden">
+      <div class="shell inner-page-head">
+        <button class="back-button" onclick="showHome()">← kembali ke beranda</button>
+        <span class="eyebrow">TEMUKAN</span>
+        <h1>Cari pengalaman yang<br><em>sedang kamu butuhkan.</em></h1>
+        <p>Gunakan kata yang terasa natural. Misalnya “aku mau interview”, “hari pertama kerja”, atau cukup “teman”.</p>
+        <form id="discoverForm" class="search-bar wide-search">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="discoverInput" type="search" placeholder="Contoh: aku takut presentasi" aria-label="Cari pengalaman di halaman Temukan">
+          <button type="submit">Cari <span>→</span></button>
+        </form>
+      </div>
+
+      <div class="shell discover-layout">
+        <aside class="filter-panel">
+          <span class="filter-title">PILIH KATEGORI</span>
+          <div id="discoverCategories" class="filter-list"></div>
+          <button class="reset-filter" onclick="clearSearch(); renderDiscoverList(experiences)">reset pilihan</button>
+        </aside>
+        <section class="discover-results">
+          <div class="results-top"><strong id="discoverResultTitle">Semua cerita</strong><span id="discoverResultCount"></span></div>
+          <div id="discoverList" class="discover-list"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="detailPage" class="page-section hidden">
+      <div class="shell detail-shell">
+        <button class="back-button" onclick="goBackFromDetail()">← kembali</button>
+        <div id="detailContent"></div>
+      </div>
+    </section>
+
+    <section id="sharePage" class="page-section hidden">
+      <div class="shell share-head">
+        <span class="eyebrow">BAGIKAN CERITA</span>
+        <h1>Pengalamanmu mungkin<br><em>sedang dicari orang lain.</em></h1>
+        <p>Tidak perlu menjadi ahli. Ceritakan satu kejadian yang pernah kamu alami, lalu bagikan hal yang kamu pelajari darinya.</p>
+      </div>
+
+      <div class="shell share-layout">
+        <aside class="share-aside">
+          <div class="quote-mark">“</div>
+          <h2>Kita sering tidak membutuhkan jawaban sempurna.</h2>
+          <p>Kadang kita hanya ingin tahu: <strong>“orang lain pernah mengalami ini juga, nggak?”</strong></p>
+          <div class="aside-note"><span>01</span> tulis dengan gaya kamu sendiri</div>
+          <div class="aside-note"><span>02</span> tidak harus panjang</div>
+          <div class="aside-note"><span>03</span> ceritakan apa yang benar-benar terjadi</div>
+        </aside>
+
+        <div class="form-wrap">
+          <div class="form-progress"><span></span><small>cerita kamu tersimpan sebagai draft di perangkat ini</small></div>
+          <form id="shareForm" class="story-form">
+            <div class="form-section-label">CERITA DASAR</div>
+            <label>Judul cerita <span class="required">*</span>
+              <input id="title" required maxlength="100" placeholder="Misalnya: Hari pertama kerja ternyata tidak seseram itu">
+            </label>
+            <div class="two-fields">
+              <label>Kategori <span class="required">*</span>
+                <select id="category" required></select>
+              </label>
+              <label>Situasi <span class="required">*</span>
+                <input id="situation" required maxlength="80" placeholder="Misalnya: Hari pertama kerja">
+              </label>
+            </div>
+
+            <div class="form-section-label">CERITAKAN YANG TERJADI</div>
+            <label>Apa yang terjadi? <span class="required">*</span>
+              <textarea id="happened" required maxlength="900" placeholder="Ceritakan situasinya dengan gaya kamu sendiri..."></textarea>
+              <span class="char-count" data-for="happened">0 / 900</span>
+            </label>
+            <label>Apa yang kamu lakukan? <span class="required">*</span>
+              <textarea id="did" required maxlength="900" placeholder="Bagaimana kamu menghadapi situasi tersebut..."></textarea>
+              <span class="char-count" data-for="did">0 / 900</span>
+            </label>
+            <label>Apa yang ternyata berbeda dari dugaanmu?
+              <textarea id="unexpected" maxlength="700" placeholder="Bagian ini boleh dikosongkan."></textarea>
+              <span class="char-count" data-for="unexpected">0 / 700</span>
+            </label>
+
+            <div class="form-section-label">PELAJARAN YANG TERSISA</div>
+            <label>Apa yang kamu pelajari? <span class="required">*</span>
+              <textarea id="lesson" required maxlength="700" placeholder="Hal apa yang ingin kamu ingat dari pengalaman ini..."></textarea>
+              <span class="char-count" data-for="lesson">0 / 700</span>
+            </label>
+            <label>Kalau mengulang lagi, apa yang akan kamu lakukan?
+              <textarea id="repeat" maxlength="700" placeholder="Boleh dikosongkan."></textarea>
+              <span class="char-count" data-for="repeat">0 / 700</span>
+            </label>
+
+            <div class="form-actions">
+              <button class="secondary-action" type="button" onclick="clearDraft()">hapus draft</button>
+              <button class="send-story" type="submit">Bagikan cerita <span>↗</span></button>
+            </div>
+            <p class="form-note">Dengan membagikan cerita, kamu setuju bahwa cerita ini ditampilkan di aplikasi pada perangkat/browser yang digunakan.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="savedPage" class="page-section hidden">
+      <div class="shell saved-head inner-page-head">
+        <span class="eyebrow">CERITA TERSIMPAN</span>
+        <h1>Hal-hal yang ingin<br><em>kamu baca lagi.</em></h1>
+        <p>Daftar ini tersimpan di browser kamu. Tidak perlu login untuk menyimpan cerita favorit.</p>
+      </div>
+      <div class="shell saved-layout">
+        <div id="savedList" class="story-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div class="footer-brand"><img class="brand-logo" src="icon.svg" alt="Experience Finder logo"><strong>Experience Finder</strong></div>
+      <p>Tempat untuk menemukan keberanian dari pengalaman orang lain.</p>
+      <span class="copyright">© 2026 Experience Finder. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <div id="shareModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()" aria-label="Tutup">×</button>
+      <span class="eyebrow">BAGIKAN</span>
+      <h2 id="shareModalTitle">Bagikan cerita ini?</h2>
+      <p>Salin tautan halaman cerita untuk membagikannya. Pada versi tugas ini, tautan berbasis ID cerita dan tetap bekerja di browser yang sama.</p>
+      <button class="modal-primary" onclick="copyCurrentStoryLink()">Salin tautan <span>↗</span></button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
